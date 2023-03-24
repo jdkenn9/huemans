@@ -47,15 +47,9 @@ const App = ({ signOut }) => {
       }
     }
 
-    const variables1 = {
-      filter: {
-        LastName: {
-        contains: searchTerm
-        }
-      }
-    };
+    
   console.log(searchTerm)
-  const apiData = await API.graphql({ query: listUsers, variables: variables, variables: variables1});
+  const apiData = await API.graphql({ query: listUsers, variables: variables});
   const usersFromAPI = apiData.data.listUsers.items;
   await Promise.all (
     usersFromAPI.map(async (user) => {
