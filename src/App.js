@@ -1,3 +1,4 @@
+import logo from "./huemans-logo.PNG";
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import "@aws-amplify/ui-react/styles.css";
@@ -8,11 +9,13 @@ import {
   Heading,
   Image,
   Text,
+  Card,
   TextField,
+  SearchField,
   View,
   withAuthenticator,
 } from '@aws-amplify/ui-react';
-import { listNotes } from "./graphql/queries";
+import { listNotes , listUsers} from "./graphql/queries";
 import {
   createNote as createNoteMutation,
   deleteNote as deleteNoteMutation,
@@ -21,9 +24,48 @@ import {
 const App = ({ signOut }) => {
   const [notes, setNotes] = useState([]);
 
-  useEffect(() => {
-    fetchNotes();
-  }, []);
+  const [users, setUsers] = useState([]);
+
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const handleSearchTermChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+  
+
+/*  useEffect(() => {
+    fetchUsers();
+  }, []);*/
+
+  async function fetchUsers() {
+
+    const variables = {
+      filter: {
+        FirstName: {
+        contains: searchTerm
+        }
+      }
+    }
+
+    const variables1 = {
+      filter: {
+        LastName: {
+        contains: searchTerm
+        }
+      }
+    };
+  console.log(searchTerm)
+  const apiData = await API.graphql({ query: listUsers, variables: variables, variables: variables1});
+  const usersFromAPI = apiData.data.listUsers.items;
+  await Promise.all (
+    usersFromAPI.map(async (user) => {
+      return user;
+    })
+  );
+  setUsers(usersFromAPI);
+  console.log(usersFromAPI)
+  }
+
 
   async function fetchNotes() {
   const apiData = await API.graphql({ query: listNotes });
@@ -68,67 +110,23 @@ const App = ({ signOut }) => {
   });
 }
 
-  return (
-    <View className="App">
-      <Heading level={1}>My Notes App</Heading>
-      <View as="form" margin="3rem 0" onSubmit={createNote}>
-        <Flex direction="row" justifyContent="center">
-	  <View
- 	    name="image"
- 	    as="input"
-  	    type="file"
-  	    style={{ alignSelf: "end" }}
-	  />
-          <TextField
-            name="name"
-            placeholder="Note Name"
-            label="Note Name"
-            labelHidden
-            variation="quiet"
-            required
-          />
-          <TextField
-            name="description"
-            placeholder="Note Description"
-            label="Note Description"
-            labelHidden
-            variation="quiet"
-            required
-          />
-          <Button type="submit" variation="primary">
-            Create Note
-          </Button>
-        </Flex>
-      </View>
-      <Heading level={2}>Current Notes</Heading>
-      <View margin="3rem 0">
-        {notes.map((note) => (
-  <Flex
-    key={note.id || note.name}
-    direction="row"
-    justifyContent="center"
-    alignItems="center"
-  >
-    <Text as="strong" fontWeight={700}>
-      {note.name}
-    </Text>
-    <Text as="span">{note.description}</Text>
-    {note.image && (
-      <Image
-        src={note.image}
-        alt={`visual aid for ${notes.name}`}
-        style={{ width: 400 }}
+return (
+  <View className="App">
+    <Card>
+      <Image src={logo} className="App-logo" alt="logo" />
+      <Heading level={1}>Welcome to HUEMANS!</Heading>
+      <SearchField
+        label="Search"
+        placeholder="Search here..."
+        value = {searchTerm} 
+        onChange = {handleSearchTermChange}
       />
-    )}
-    <Button variation="link" onClick={() => deleteNote(note)}>
-      Delete note
-    </Button>
-  </Flex>
-))}
-      </View>
-      <Button onClick={signOut}>Sign Out</Button>
-    </View>
-  );
-};
+      <Button onClick={fetchUsers}>Search</Button>
+    </Card>
+    <Button onClick={signOut}>Sign Out</Button>
+  </View>
+);
+}
+
 
 export default withAuthenticator(App);
