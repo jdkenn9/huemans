@@ -8,13 +8,13 @@
 import * as React from "react";
 import { Button, Flex, Grid, TextField } from "@aws-amplify/ui-react";
 import { getOverrideProps } from "@aws-amplify/ui-react/internal";
-import { Notes } from "../models";
+import { Logos } from "../models";
 import { fetchByPath, validateField } from "./utils";
 import { DataStore } from "aws-amplify";
-export default function NotesUpdateForm(props) {
+export default function LogosUpdateForm(props) {
   const {
     id: idProp,
-    notes: notesModelProp,
+    logos: logosModelProp,
     onSuccess,
     onError,
     onSubmit,
@@ -24,40 +24,34 @@ export default function NotesUpdateForm(props) {
     ...rest
   } = props;
   const initialValues = {
-    name: "",
-    description: "",
-    image: "",
+    BigLogo: "",
+    SmallLogo: "",
   };
-  const [name, setName] = React.useState(initialValues.name);
-  const [description, setDescription] = React.useState(
-    initialValues.description
-  );
-  const [image, setImage] = React.useState(initialValues.image);
+  const [BigLogo, setBigLogo] = React.useState(initialValues.BigLogo);
+  const [SmallLogo, setSmallLogo] = React.useState(initialValues.SmallLogo);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
-    const cleanValues = notesRecord
-      ? { ...initialValues, ...notesRecord }
+    const cleanValues = logosRecord
+      ? { ...initialValues, ...logosRecord }
       : initialValues;
-    setName(cleanValues.name);
-    setDescription(cleanValues.description);
-    setImage(cleanValues.image);
+    setBigLogo(cleanValues.BigLogo);
+    setSmallLogo(cleanValues.SmallLogo);
     setErrors({});
   };
-  const [notesRecord, setNotesRecord] = React.useState(notesModelProp);
+  const [logosRecord, setLogosRecord] = React.useState(logosModelProp);
   React.useEffect(() => {
     const queryData = async () => {
       const record = idProp
-        ? await DataStore.query(Notes, idProp)
-        : notesModelProp;
-      setNotesRecord(record);
+        ? await DataStore.query(Logos, idProp)
+        : logosModelProp;
+      setLogosRecord(record);
     };
     queryData();
-  }, [idProp, notesModelProp]);
-  React.useEffect(resetStateValues, [notesRecord]);
+  }, [idProp, logosModelProp]);
+  React.useEffect(resetStateValues, [logosRecord]);
   const validations = {
-    name: [],
-    description: [],
-    image: [],
+    BigLogo: [],
+    SmallLogo: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -85,9 +79,8 @@ export default function NotesUpdateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
-          name,
-          description,
-          image,
+          BigLogo,
+          SmallLogo,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -118,7 +111,7 @@ export default function NotesUpdateForm(props) {
             }
           });
           await DataStore.save(
-            Notes.copyOf(notesRecord, (updated) => {
+            Logos.copyOf(logosRecord, (updated) => {
               Object.assign(updated, modelFields);
             })
           );
@@ -131,86 +124,58 @@ export default function NotesUpdateForm(props) {
           }
         }
       }}
-      {...getOverrideProps(overrides, "NotesUpdateForm")}
+      {...getOverrideProps(overrides, "LogosUpdateForm")}
       {...rest}
     >
       <TextField
-        label="Name"
+        label="Big logo"
         isRequired={false}
         isReadOnly={false}
-        value={name}
+        value={BigLogo}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              name: value,
-              description,
-              image,
+              BigLogo: value,
+              SmallLogo,
             };
             const result = onChange(modelFields);
-            value = result?.name ?? value;
+            value = result?.BigLogo ?? value;
           }
-          if (errors.name?.hasError) {
-            runValidationTasks("name", value);
+          if (errors.BigLogo?.hasError) {
+            runValidationTasks("BigLogo", value);
           }
-          setName(value);
+          setBigLogo(value);
         }}
-        onBlur={() => runValidationTasks("name", name)}
-        errorMessage={errors.name?.errorMessage}
-        hasError={errors.name?.hasError}
-        {...getOverrideProps(overrides, "name")}
+        onBlur={() => runValidationTasks("BigLogo", BigLogo)}
+        errorMessage={errors.BigLogo?.errorMessage}
+        hasError={errors.BigLogo?.hasError}
+        {...getOverrideProps(overrides, "BigLogo")}
       ></TextField>
       <TextField
-        label="Description"
+        label="Small logo"
         isRequired={false}
         isReadOnly={false}
-        value={description}
+        value={SmallLogo}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              name,
-              description: value,
-              image,
+              BigLogo,
+              SmallLogo: value,
             };
             const result = onChange(modelFields);
-            value = result?.description ?? value;
+            value = result?.SmallLogo ?? value;
           }
-          if (errors.description?.hasError) {
-            runValidationTasks("description", value);
+          if (errors.SmallLogo?.hasError) {
+            runValidationTasks("SmallLogo", value);
           }
-          setDescription(value);
+          setSmallLogo(value);
         }}
-        onBlur={() => runValidationTasks("description", description)}
-        errorMessage={errors.description?.errorMessage}
-        hasError={errors.description?.hasError}
-        {...getOverrideProps(overrides, "description")}
-      ></TextField>
-      <TextField
-        label="Image"
-        isRequired={false}
-        isReadOnly={false}
-        value={image}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              name,
-              description,
-              image: value,
-            };
-            const result = onChange(modelFields);
-            value = result?.image ?? value;
-          }
-          if (errors.image?.hasError) {
-            runValidationTasks("image", value);
-          }
-          setImage(value);
-        }}
-        onBlur={() => runValidationTasks("image", image)}
-        errorMessage={errors.image?.errorMessage}
-        hasError={errors.image?.hasError}
-        {...getOverrideProps(overrides, "image")}
+        onBlur={() => runValidationTasks("SmallLogo", SmallLogo)}
+        errorMessage={errors.SmallLogo?.errorMessage}
+        hasError={errors.SmallLogo?.hasError}
+        {...getOverrideProps(overrides, "SmallLogo")}
       ></TextField>
       <Flex
         justifyContent="space-between"
@@ -223,7 +188,7 @@ export default function NotesUpdateForm(props) {
             event.preventDefault();
             resetStateValues();
           }}
-          isDisabled={!(idProp || notesModelProp)}
+          isDisabled={!(idProp || logosModelProp)}
           {...getOverrideProps(overrides, "ResetButton")}
         ></Button>
         <Flex
@@ -235,7 +200,7 @@ export default function NotesUpdateForm(props) {
             type="submit"
             variation="primary"
             isDisabled={
-              !(idProp || notesModelProp) ||
+              !(idProp || logosModelProp) ||
               Object.values(errors).some((e) => e?.hasError)
             }
             {...getOverrideProps(overrides, "SubmitButton")}

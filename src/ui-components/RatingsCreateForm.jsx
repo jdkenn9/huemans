@@ -8,13 +8,12 @@
 import * as React from "react";
 import { Button, Flex, Grid, TextField } from "@aws-amplify/ui-react";
 import { getOverrideProps } from "@aws-amplify/ui-react/internal";
-import { Notes } from "../models";
+import { Ratings } from "../models";
 import { fetchByPath, validateField } from "./utils";
 import { DataStore } from "aws-amplify";
-export default function NotesUpdateForm(props) {
+export default function RatingsCreateForm(props) {
   const {
-    id: idProp,
-    notes: notesModelProp,
+    clearOnSuccess = true,
     onSuccess,
     onError,
     onSubmit,
@@ -24,40 +23,20 @@ export default function NotesUpdateForm(props) {
     ...rest
   } = props;
   const initialValues = {
-    name: "",
-    description: "",
-    image: "",
+    Rating: "",
+    Review: "",
   };
-  const [name, setName] = React.useState(initialValues.name);
-  const [description, setDescription] = React.useState(
-    initialValues.description
-  );
-  const [image, setImage] = React.useState(initialValues.image);
+  const [Rating, setRating] = React.useState(initialValues.Rating);
+  const [Review, setReview] = React.useState(initialValues.Review);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
-    const cleanValues = notesRecord
-      ? { ...initialValues, ...notesRecord }
-      : initialValues;
-    setName(cleanValues.name);
-    setDescription(cleanValues.description);
-    setImage(cleanValues.image);
+    setRating(initialValues.Rating);
+    setReview(initialValues.Review);
     setErrors({});
   };
-  const [notesRecord, setNotesRecord] = React.useState(notesModelProp);
-  React.useEffect(() => {
-    const queryData = async () => {
-      const record = idProp
-        ? await DataStore.query(Notes, idProp)
-        : notesModelProp;
-      setNotesRecord(record);
-    };
-    queryData();
-  }, [idProp, notesModelProp]);
-  React.useEffect(resetStateValues, [notesRecord]);
   const validations = {
-    name: [],
-    description: [],
-    image: [],
+    Rating: [],
+    Review: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -85,9 +64,8 @@ export default function NotesUpdateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
-          name,
-          description,
-          image,
+          Rating,
+          Review,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -117,13 +95,12 @@ export default function NotesUpdateForm(props) {
               modelFields[key] = undefined;
             }
           });
-          await DataStore.save(
-            Notes.copyOf(notesRecord, (updated) => {
-              Object.assign(updated, modelFields);
-            })
-          );
+          await DataStore.save(new Ratings(modelFields));
           if (onSuccess) {
             onSuccess(modelFields);
+          }
+          if (clearOnSuccess) {
+            resetStateValues();
           }
         } catch (err) {
           if (onError) {
@@ -131,100 +108,75 @@ export default function NotesUpdateForm(props) {
           }
         }
       }}
-      {...getOverrideProps(overrides, "NotesUpdateForm")}
+      {...getOverrideProps(overrides, "RatingsCreateForm")}
       {...rest}
     >
       <TextField
-        label="Name"
+        label="Rating"
         isRequired={false}
         isReadOnly={false}
-        value={name}
+        type="number"
+        step="any"
+        value={Rating}
         onChange={(e) => {
-          let { value } = e.target;
+          let value = isNaN(parseInt(e.target.value))
+            ? e.target.value
+            : parseInt(e.target.value);
           if (onChange) {
             const modelFields = {
-              name: value,
-              description,
-              image,
+              Rating: value,
+              Review,
             };
             const result = onChange(modelFields);
-            value = result?.name ?? value;
+            value = result?.Rating ?? value;
           }
-          if (errors.name?.hasError) {
-            runValidationTasks("name", value);
+          if (errors.Rating?.hasError) {
+            runValidationTasks("Rating", value);
           }
-          setName(value);
+          setRating(value);
         }}
-        onBlur={() => runValidationTasks("name", name)}
-        errorMessage={errors.name?.errorMessage}
-        hasError={errors.name?.hasError}
-        {...getOverrideProps(overrides, "name")}
+        onBlur={() => runValidationTasks("Rating", Rating)}
+        errorMessage={errors.Rating?.errorMessage}
+        hasError={errors.Rating?.hasError}
+        {...getOverrideProps(overrides, "Rating")}
       ></TextField>
       <TextField
-        label="Description"
+        label="Review"
         isRequired={false}
         isReadOnly={false}
-        value={description}
+        value={Review}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              name,
-              description: value,
-              image,
+              Rating,
+              Review: value,
             };
             const result = onChange(modelFields);
-            value = result?.description ?? value;
+            value = result?.Review ?? value;
           }
-          if (errors.description?.hasError) {
-            runValidationTasks("description", value);
+          if (errors.Review?.hasError) {
+            runValidationTasks("Review", value);
           }
-          setDescription(value);
+          setReview(value);
         }}
-        onBlur={() => runValidationTasks("description", description)}
-        errorMessage={errors.description?.errorMessage}
-        hasError={errors.description?.hasError}
-        {...getOverrideProps(overrides, "description")}
-      ></TextField>
-      <TextField
-        label="Image"
-        isRequired={false}
-        isReadOnly={false}
-        value={image}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              name,
-              description,
-              image: value,
-            };
-            const result = onChange(modelFields);
-            value = result?.image ?? value;
-          }
-          if (errors.image?.hasError) {
-            runValidationTasks("image", value);
-          }
-          setImage(value);
-        }}
-        onBlur={() => runValidationTasks("image", image)}
-        errorMessage={errors.image?.errorMessage}
-        hasError={errors.image?.hasError}
-        {...getOverrideProps(overrides, "image")}
+        onBlur={() => runValidationTasks("Review", Review)}
+        errorMessage={errors.Review?.errorMessage}
+        hasError={errors.Review?.hasError}
+        {...getOverrideProps(overrides, "Review")}
       ></TextField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}
       >
         <Button
-          children="Reset"
+          children="Clear"
           type="reset"
           onClick={(event) => {
             event.preventDefault();
             resetStateValues();
           }}
-          isDisabled={!(idProp || notesModelProp)}
-          {...getOverrideProps(overrides, "ResetButton")}
+          {...getOverrideProps(overrides, "ClearButton")}
         ></Button>
         <Flex
           gap="15px"
@@ -234,10 +186,7 @@ export default function NotesUpdateForm(props) {
             children="Submit"
             type="submit"
             variation="primary"
-            isDisabled={
-              !(idProp || notesModelProp) ||
-              Object.values(errors).some((e) => e?.hasError)
-            }
+            isDisabled={Object.values(errors).some((e) => e?.hasError)}
             {...getOverrideProps(overrides, "SubmitButton")}
           ></Button>
         </Flex>

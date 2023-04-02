@@ -1,6 +1,6 @@
 import { ModelInit, MutableModel, __modelMeta__, ManagedIdentifier } from "@aws-amplify/datastore";
 // @ts-ignore
-import { LazyLoading, LazyLoadingDisabled, AsyncCollection, AsyncItem } from "@aws-amplify/datastore";
+import { LazyLoading, LazyLoadingDisabled } from "@aws-amplify/datastore";
 
 
 
@@ -22,38 +22,6 @@ export declare type Addresses = LazyLoading extends LazyLoadingDisabled ? EagerA
 
 export declare const Addresses: (new (init: ModelInit<Addresses>) => Addresses)
 
-type EagerNotes = {
-  readonly [__modelMeta__]: {
-    identifier: ManagedIdentifier<Notes, 'id'>;
-    readOnlyFields: 'createdAt' | 'updatedAt';
-  };
-  readonly id: string;
-  readonly name: string;
-  readonly description?: string | null;
-  readonly image?: string | null;
-  readonly createdAt?: string | null;
-  readonly updatedAt?: string | null;
-}
-
-type LazyNotes = {
-  readonly [__modelMeta__]: {
-    identifier: ManagedIdentifier<Notes, 'id'>;
-    readOnlyFields: 'createdAt' | 'updatedAt';
-  };
-  readonly id: string;
-  readonly name: string;
-  readonly description?: string | null;
-  readonly image?: string | null;
-  readonly createdAt?: string | null;
-  readonly updatedAt?: string | null;
-}
-
-export declare type Notes = LazyLoading extends LazyLoadingDisabled ? EagerNotes : LazyNotes
-
-export declare const Notes: (new (init: ModelInit<Notes>) => Notes) & {
-  copyOf(source: Notes, mutator: (draft: MutableModel<Notes>) => MutableModel<Notes> | void): Notes;
-}
-
 type EagerRatings = {
   readonly [__modelMeta__]: {
     identifier: ManagedIdentifier<Ratings, 'id'>;
@@ -62,9 +30,6 @@ type EagerRatings = {
   readonly id: string;
   readonly Rating?: number | null;
   readonly Review?: string | null;
-  readonly DateLeft?: string | null;
-  readonly usersID: string;
-  readonly businessesID: string;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -77,9 +42,6 @@ type LazyRatings = {
   readonly id: string;
   readonly Rating?: number | null;
   readonly Review?: string | null;
-  readonly DateLeft?: string | null;
-  readonly usersID: string;
-  readonly businessesID: string;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -97,12 +59,9 @@ type EagerBusinesses = {
   };
   readonly id: string;
   readonly Name?: string | null;
-  readonly Owner?: string | null;
-  readonly Rating?: number | null;
-  readonly TotalReviews?: number | null;
-  readonly Hours?: string | null;
   readonly Address?: Addresses | null;
-  readonly BusinessRatings?: (Ratings | null)[] | null;
+  readonly Hours?: string | null;
+  readonly BusinessImage?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -114,12 +73,9 @@ type LazyBusinesses = {
   };
   readonly id: string;
   readonly Name?: string | null;
-  readonly Owner?: string | null;
-  readonly Rating?: number | null;
-  readonly TotalReviews?: number | null;
-  readonly Hours?: string | null;
   readonly Address?: Addresses | null;
-  readonly BusinessRatings: AsyncCollection<Ratings>;
+  readonly Hours?: string | null;
+  readonly BusinessImage?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -142,12 +98,9 @@ type EagerUsers = {
   readonly Email?: string | null;
   readonly Phone?: string | null;
   readonly Birthday?: string | null;
-  readonly Owner?: boolean | null;
-  readonly UsersRatings?: (Ratings | null)[] | null;
-  readonly OwnedBusinesses?: Businesses | null;
+  readonly ProfileImage?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
-  readonly usersOwnedBusinessesId?: string | null;
 }
 
 type LazyUsers = {
@@ -162,16 +115,75 @@ type LazyUsers = {
   readonly Email?: string | null;
   readonly Phone?: string | null;
   readonly Birthday?: string | null;
-  readonly Owner?: boolean | null;
-  readonly UsersRatings: AsyncCollection<Ratings>;
-  readonly OwnedBusinesses: AsyncItem<Businesses | undefined>;
+  readonly ProfileImage?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
-  readonly usersOwnedBusinessesId?: string | null;
 }
 
 export declare type Users = LazyLoading extends LazyLoadingDisabled ? EagerUsers : LazyUsers
 
 export declare const Users: (new (init: ModelInit<Users>) => Users) & {
   copyOf(source: Users, mutator: (draft: MutableModel<Users>) => MutableModel<Users> | void): Users;
+}
+
+type EagerNotes = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<Notes, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly name?: string | null;
+  readonly description?: string | null;
+  readonly image?: string | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+type LazyNotes = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<Notes, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly name?: string | null;
+  readonly description?: string | null;
+  readonly image?: string | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+export declare type Notes = LazyLoading extends LazyLoadingDisabled ? EagerNotes : LazyNotes
+
+export declare const Notes: (new (init: ModelInit<Notes>) => Notes) & {
+  copyOf(source: Notes, mutator: (draft: MutableModel<Notes>) => MutableModel<Notes> | void): Notes;
+}
+
+type EagerLogos = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<Logos, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly BigLogo?: string | null;
+  readonly SmallLogo?: string | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+type LazyLogos = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<Logos, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly BigLogo?: string | null;
+  readonly SmallLogo?: string | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+export declare type Logos = LazyLoading extends LazyLoadingDisabled ? EagerLogos : LazyLogos
+
+export declare const Logos: (new (init: ModelInit<Logos>) => Logos) & {
+  copyOf(source: Logos, mutator: (draft: MutableModel<Logos>) => MutableModel<Logos> | void): Logos;
 }

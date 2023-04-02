@@ -25,28 +25,22 @@ export default function BusinessesUpdateForm(props) {
   } = props;
   const initialValues = {
     Name: "",
-    Owner: "",
-    Rating: "",
-    TotalReviews: "",
     Hours: "",
+    BusinessImage: "",
   };
   const [Name, setName] = React.useState(initialValues.Name);
-  const [Owner, setOwner] = React.useState(initialValues.Owner);
-  const [Rating, setRating] = React.useState(initialValues.Rating);
-  const [TotalReviews, setTotalReviews] = React.useState(
-    initialValues.TotalReviews
-  );
   const [Hours, setHours] = React.useState(initialValues.Hours);
+  const [BusinessImage, setBusinessImage] = React.useState(
+    initialValues.BusinessImage
+  );
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     const cleanValues = businessesRecord
       ? { ...initialValues, ...businessesRecord }
       : initialValues;
     setName(cleanValues.Name);
-    setOwner(cleanValues.Owner);
-    setRating(cleanValues.Rating);
-    setTotalReviews(cleanValues.TotalReviews);
     setHours(cleanValues.Hours);
+    setBusinessImage(cleanValues.BusinessImage);
     setErrors({});
   };
   const [businessesRecord, setBusinessesRecord] =
@@ -63,10 +57,8 @@ export default function BusinessesUpdateForm(props) {
   React.useEffect(resetStateValues, [businessesRecord]);
   const validations = {
     Name: [],
-    Owner: [],
-    Rating: [],
-    TotalReviews: [],
     Hours: [],
+    BusinessImage: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -95,10 +87,8 @@ export default function BusinessesUpdateForm(props) {
         event.preventDefault();
         let modelFields = {
           Name,
-          Owner,
-          Rating,
-          TotalReviews,
           Hours,
+          BusinessImage,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -155,10 +145,8 @@ export default function BusinessesUpdateForm(props) {
           if (onChange) {
             const modelFields = {
               Name: value,
-              Owner,
-              Rating,
-              TotalReviews,
               Hours,
+              BusinessImage,
             };
             const result = onChange(modelFields);
             value = result?.Name ?? value;
@@ -174,98 +162,6 @@ export default function BusinessesUpdateForm(props) {
         {...getOverrideProps(overrides, "Name")}
       ></TextField>
       <TextField
-        label="Owner"
-        isRequired={false}
-        isReadOnly={false}
-        value={Owner}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              Name,
-              Owner: value,
-              Rating,
-              TotalReviews,
-              Hours,
-            };
-            const result = onChange(modelFields);
-            value = result?.Owner ?? value;
-          }
-          if (errors.Owner?.hasError) {
-            runValidationTasks("Owner", value);
-          }
-          setOwner(value);
-        }}
-        onBlur={() => runValidationTasks("Owner", Owner)}
-        errorMessage={errors.Owner?.errorMessage}
-        hasError={errors.Owner?.hasError}
-        {...getOverrideProps(overrides, "Owner")}
-      ></TextField>
-      <TextField
-        label="Rating"
-        isRequired={false}
-        isReadOnly={false}
-        type="number"
-        step="any"
-        value={Rating}
-        onChange={(e) => {
-          let value = isNaN(parseFloat(e.target.value))
-            ? e.target.value
-            : parseFloat(e.target.value);
-          if (onChange) {
-            const modelFields = {
-              Name,
-              Owner,
-              Rating: value,
-              TotalReviews,
-              Hours,
-            };
-            const result = onChange(modelFields);
-            value = result?.Rating ?? value;
-          }
-          if (errors.Rating?.hasError) {
-            runValidationTasks("Rating", value);
-          }
-          setRating(value);
-        }}
-        onBlur={() => runValidationTasks("Rating", Rating)}
-        errorMessage={errors.Rating?.errorMessage}
-        hasError={errors.Rating?.hasError}
-        {...getOverrideProps(overrides, "Rating")}
-      ></TextField>
-      <TextField
-        label="Total reviews"
-        isRequired={false}
-        isReadOnly={false}
-        type="number"
-        step="any"
-        value={TotalReviews}
-        onChange={(e) => {
-          let value = isNaN(parseInt(e.target.value))
-            ? e.target.value
-            : parseInt(e.target.value);
-          if (onChange) {
-            const modelFields = {
-              Name,
-              Owner,
-              Rating,
-              TotalReviews: value,
-              Hours,
-            };
-            const result = onChange(modelFields);
-            value = result?.TotalReviews ?? value;
-          }
-          if (errors.TotalReviews?.hasError) {
-            runValidationTasks("TotalReviews", value);
-          }
-          setTotalReviews(value);
-        }}
-        onBlur={() => runValidationTasks("TotalReviews", TotalReviews)}
-        errorMessage={errors.TotalReviews?.errorMessage}
-        hasError={errors.TotalReviews?.hasError}
-        {...getOverrideProps(overrides, "TotalReviews")}
-      ></TextField>
-      <TextField
         label="Hours"
         isRequired={false}
         isReadOnly={false}
@@ -275,10 +171,8 @@ export default function BusinessesUpdateForm(props) {
           if (onChange) {
             const modelFields = {
               Name,
-              Owner,
-              Rating,
-              TotalReviews,
               Hours: value,
+              BusinessImage,
             };
             const result = onChange(modelFields);
             value = result?.Hours ?? value;
@@ -292,6 +186,32 @@ export default function BusinessesUpdateForm(props) {
         errorMessage={errors.Hours?.errorMessage}
         hasError={errors.Hours?.hasError}
         {...getOverrideProps(overrides, "Hours")}
+      ></TextField>
+      <TextField
+        label="Business image"
+        isRequired={false}
+        isReadOnly={false}
+        value={BusinessImage}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              Name,
+              Hours,
+              BusinessImage: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.BusinessImage ?? value;
+          }
+          if (errors.BusinessImage?.hasError) {
+            runValidationTasks("BusinessImage", value);
+          }
+          setBusinessImage(value);
+        }}
+        onBlur={() => runValidationTasks("BusinessImage", BusinessImage)}
+        errorMessage={errors.BusinessImage?.errorMessage}
+        hasError={errors.BusinessImage?.hasError}
+        {...getOverrideProps(overrides, "BusinessImage")}
       ></TextField>
       <Flex
         justifyContent="space-between"

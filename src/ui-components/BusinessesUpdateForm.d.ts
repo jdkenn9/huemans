@@ -15,26 +15,20 @@ export declare type ValidationResponse = {
 export declare type ValidationFunction<T> = (value: T, validationResponse: ValidationResponse) => ValidationResponse | Promise<ValidationResponse>;
 export declare type BusinessesUpdateFormInputValues = {
     Name?: string;
-    Owner?: string;
-    Rating?: number;
-    TotalReviews?: number;
     Hours?: string;
+    BusinessImage?: string;
 };
 export declare type BusinessesUpdateFormValidationValues = {
     Name?: ValidationFunction<string>;
-    Owner?: ValidationFunction<string>;
-    Rating?: ValidationFunction<number>;
-    TotalReviews?: ValidationFunction<number>;
     Hours?: ValidationFunction<string>;
+    BusinessImage?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type BusinessesUpdateFormOverridesProps = {
     BusinessesUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
     Name?: PrimitiveOverrideProps<TextFieldProps>;
-    Owner?: PrimitiveOverrideProps<TextFieldProps>;
-    Rating?: PrimitiveOverrideProps<TextFieldProps>;
-    TotalReviews?: PrimitiveOverrideProps<TextFieldProps>;
     Hours?: PrimitiveOverrideProps<TextFieldProps>;
+    BusinessImage?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type BusinessesUpdateFormProps = React.PropsWithChildren<{
     overrides?: BusinessesUpdateFormOverridesProps | undefined | null;

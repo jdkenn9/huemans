@@ -6,13 +6,7 @@
 
 /* eslint-disable */
 import * as React from "react";
-import {
-  Button,
-  Flex,
-  Grid,
-  SwitchField,
-  TextField,
-} from "@aws-amplify/ui-react";
+import { Button, Flex, Grid, TextField } from "@aws-amplify/ui-react";
 import { getOverrideProps } from "@aws-amplify/ui-react/internal";
 import { Users } from "../models";
 import { fetchByPath, validateField } from "./utils";
@@ -36,7 +30,7 @@ export default function UsersUpdateForm(props) {
     Email: "",
     Phone: "",
     Birthday: "",
-    Owner: false,
+    ProfileImage: "",
   };
   const [UserName, setUserName] = React.useState(initialValues.UserName);
   const [FirstName, setFirstName] = React.useState(initialValues.FirstName);
@@ -44,7 +38,9 @@ export default function UsersUpdateForm(props) {
   const [Email, setEmail] = React.useState(initialValues.Email);
   const [Phone, setPhone] = React.useState(initialValues.Phone);
   const [Birthday, setBirthday] = React.useState(initialValues.Birthday);
-  const [Owner, setOwner] = React.useState(initialValues.Owner);
+  const [ProfileImage, setProfileImage] = React.useState(
+    initialValues.ProfileImage
+  );
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     const cleanValues = usersRecord
@@ -56,7 +52,7 @@ export default function UsersUpdateForm(props) {
     setEmail(cleanValues.Email);
     setPhone(cleanValues.Phone);
     setBirthday(cleanValues.Birthday);
-    setOwner(cleanValues.Owner);
+    setProfileImage(cleanValues.ProfileImage);
     setErrors({});
   };
   const [usersRecord, setUsersRecord] = React.useState(usersModelProp);
@@ -77,7 +73,7 @@ export default function UsersUpdateForm(props) {
     Email: [{ type: "Email" }],
     Phone: [{ type: "Phone" }],
     Birthday: [],
-    Owner: [],
+    ProfileImage: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -96,23 +92,6 @@ export default function UsersUpdateForm(props) {
     setErrors((errors) => ({ ...errors, [fieldName]: validationResponse }));
     return validationResponse;
   };
-  const convertToLocal = (date) => {
-    const df = new Intl.DateTimeFormat("default", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      calendar: "iso8601",
-      numberingSystem: "latn",
-      hourCycle: "h23",
-    });
-    const parts = df.formatToParts(date).reduce((acc, part) => {
-      acc[part.type] = part.value;
-      return acc;
-    }, {});
-    return `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}`;
-  };
   return (
     <Grid
       as="form"
@@ -128,7 +107,7 @@ export default function UsersUpdateForm(props) {
           Email,
           Phone,
           Birthday,
-          Owner,
+          ProfileImage,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -190,7 +169,7 @@ export default function UsersUpdateForm(props) {
               Email,
               Phone,
               Birthday,
-              Owner,
+              ProfileImage,
             };
             const result = onChange(modelFields);
             value = result?.UserName ?? value;
@@ -220,7 +199,7 @@ export default function UsersUpdateForm(props) {
               Email,
               Phone,
               Birthday,
-              Owner,
+              ProfileImage,
             };
             const result = onChange(modelFields);
             value = result?.FirstName ?? value;
@@ -250,7 +229,7 @@ export default function UsersUpdateForm(props) {
               Email,
               Phone,
               Birthday,
-              Owner,
+              ProfileImage,
             };
             const result = onChange(modelFields);
             value = result?.LastName ?? value;
@@ -280,7 +259,7 @@ export default function UsersUpdateForm(props) {
               Email: value,
               Phone,
               Birthday,
-              Owner,
+              ProfileImage,
             };
             const result = onChange(modelFields);
             value = result?.Email ?? value;
@@ -311,7 +290,7 @@ export default function UsersUpdateForm(props) {
               Email,
               Phone: value,
               Birthday,
-              Owner,
+              ProfileImage,
             };
             const result = onChange(modelFields);
             value = result?.Phone ?? value;
@@ -330,11 +309,10 @@ export default function UsersUpdateForm(props) {
         label="Birthday"
         isRequired={false}
         isReadOnly={false}
-        type="datetime-local"
-        value={Birthday && convertToLocal(new Date(Birthday))}
+        type="date"
+        value={Birthday}
         onChange={(e) => {
-          let value =
-            e.target.value === "" ? "" : new Date(e.target.value).toISOString();
+          let { value } = e.target;
           if (onChange) {
             const modelFields = {
               UserName,
@@ -343,7 +321,7 @@ export default function UsersUpdateForm(props) {
               Email,
               Phone,
               Birthday: value,
-              Owner,
+              ProfileImage,
             };
             const result = onChange(modelFields);
             value = result?.Birthday ?? value;
@@ -358,13 +336,13 @@ export default function UsersUpdateForm(props) {
         hasError={errors.Birthday?.hasError}
         {...getOverrideProps(overrides, "Birthday")}
       ></TextField>
-      <SwitchField
-        label="Owner"
-        defaultChecked={false}
-        isDisabled={false}
-        isChecked={Owner}
+      <TextField
+        label="Profile image"
+        isRequired={false}
+        isReadOnly={false}
+        value={ProfileImage}
         onChange={(e) => {
-          let value = e.target.checked;
+          let { value } = e.target;
           if (onChange) {
             const modelFields = {
               UserName,
@@ -373,21 +351,21 @@ export default function UsersUpdateForm(props) {
               Email,
               Phone,
               Birthday,
-              Owner: value,
+              ProfileImage: value,
             };
             const result = onChange(modelFields);
-            value = result?.Owner ?? value;
+            value = result?.ProfileImage ?? value;
           }
-          if (errors.Owner?.hasError) {
-            runValidationTasks("Owner", value);
+          if (errors.ProfileImage?.hasError) {
+            runValidationTasks("ProfileImage", value);
           }
-          setOwner(value);
+          setProfileImage(value);
         }}
-        onBlur={() => runValidationTasks("Owner", Owner)}
-        errorMessage={errors.Owner?.errorMessage}
-        hasError={errors.Owner?.hasError}
-        {...getOverrideProps(overrides, "Owner")}
-      ></SwitchField>
+        onBlur={() => runValidationTasks("ProfileImage", ProfileImage)}
+        errorMessage={errors.ProfileImage?.errorMessage}
+        hasError={errors.ProfileImage?.hasError}
+        {...getOverrideProps(overrides, "ProfileImage")}
+      ></TextField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}
