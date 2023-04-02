@@ -1,12 +1,17 @@
+<<<<<<< HEAD
 import logo from "./huemans-logo.PNG";
 import * as React from "react";
 import "./App.css";
+=======
+import logo from "./logo.svg";
+>>>>>>> parent of b8fe6d4... added graphql and storage
 import "@aws-amplify/ui-react/styles.css";
-import { API, Storage } from 'aws-amplify';
 import {
+  withAuthenticator,
   Button,
   Heading,
   Image,
+<<<<<<< HEAD
   Card,
   SearchField,
   View,
@@ -71,5 +76,22 @@ return (
 );
 }
 
+=======
+  View,
+  Card,
+} from "@aws-amplify/ui-react";
+
+function App({ signOut }) {
+  return (
+    <View className="App">
+      <Card>
+        <Image src={logo} className="App-logo" alt="logo" />
+        <Heading level={1}>We now have Auth!</Heading>
+      </Card>
+      <Button onClick={signOut}>Sign Out</Button>
+    </View>
+  );
+}
+>>>>>>> parent of b8fe6d4... added graphql and storage
 
 export default withAuthenticator(App);

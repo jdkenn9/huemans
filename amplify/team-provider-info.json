@@ -14,12 +14,15 @@
     "categories": {
       "auth": {
         "huemans03d7a671": {}
+<<<<<<< HEAD
       },
       "storage": {
         "imagestorage": {}
       },
       "api": {
         "huemans": {}
+=======
+>>>>>>> parent of b8fe6d4... added graphql and storage
       }
     }
   }
