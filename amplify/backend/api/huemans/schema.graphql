@@ -1,10 +1,55 @@
-# This "input" configures a global authorization rule to enable public access to
-# all models in this schema. Learn more about authorization rules here: https://docs.amplify.aws/cli/graphql/authorization-rules
-input AMPLIFY { globalAuthRule: AuthRule = { allow: public } } # FOR TESTING ONLY!
+type Addresses {
+  Street: String
+  City: String
+  State: String
+  PostalCode: Int
+}
 
-type Note @model @auth(rules: [ { allow: public } ] ){
+type Ratings @model @auth(rules: [{allow: public}]) {
   id: ID!
-  name: String!
+  Rating: Int
+  Review: String
+  businessesID: ID! @index(name: "byBusinesses")
+  BusinessReviews: Businesses @belongsTo(fields: ["businessesID"])
+  UserReviews: [Users] @manyToMany(relationName: "RatingsUsers")
+  usersID: ID! @index(name: "byUsers")
+}
+
+type Businesses @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  Name: String
+  Address: Addresses
+  Hours: String
+  BusinessImage: String
+  usersID: ID! @index(name: "byUsers")
+  Owner: Users @belongsTo(fields: ["usersID"])
+  Reviews: [Ratings] @hasMany(indexName: "byBusinesses", fields: ["id"])
+}
+
+type Users @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  UserName: String
+  FirstName: String
+  LastName: String
+  Email: AWSEmail
+  Phone: AWSPhone
+  Birthday: AWSDate
+  ProfileImage: String
+  OwnedBusinesses: [Businesses] @hasMany(indexName: "byUsers", fields: ["id"])
+  ratingss: [Ratings] @manyToMany(relationName: "RatingsUsers")
+  UserRatings: [Ratings] @hasMany(indexName: "byUsers", fields: ["id"])
+}
+
+type Notes @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String
   description: String
   image: String
 }
+
+type Logos @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  BigLogo: String
+  SmallLogo: String
+}
+ 
