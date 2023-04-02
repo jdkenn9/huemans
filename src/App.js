@@ -55,7 +55,7 @@ const App = ({ signOut }) => {
 return (
   <View className="App">
     <Card>
-      <Image src={logo} className="App-logo" alt="logo" />
+      <Image src="https://huemanstagingimagesbucket230557-dev.s3.amazonaws.com/public/huemans-logo.PNG"className="App-logo" alt="logo" />
       <Heading level={1}>Welcome to HUEMANS API Test!</Heading>
       <SearchField
         label="Search"
