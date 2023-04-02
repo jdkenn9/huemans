@@ -51,7 +51,7 @@ const App = ({ signOut }) => {
   setUsers(usersFromAPI);
   console.log(usersFromAPI)
   }
-
+//This is a comment
 return (
   <View className="App">
     <Card>
